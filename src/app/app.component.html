@@ -1,2 +1,4 @@
-<t-grid></t-grid>
-<t-progress></t-progress>
+<t-grid [data]="demoData">
+    <t-column name="bar-field" [property]="'bar'" [sortable]="true"></t-column>
+    <t-column name="foo-field" property="foo"></t-column>
+</t-grid>

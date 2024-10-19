@@ -1,6 +1,2 @@
-/*
- * Public API Surface of t-grid
- */
-
-export * from './lib/t-grid.service';
-export * from './lib/t-grid.component';
+export * from './lib/t-column/t-column.component';
+export * from './lib/t-grid/t-grid.component';

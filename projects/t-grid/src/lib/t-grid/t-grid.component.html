@@ -1,0 +1,10 @@
+<table>
+    <thead>
+        <tr t-grid-header [columns]="columnDefintions"></tr>
+    </thead>
+    <tbody>
+        @for (item of data; track $index) {
+            <tr t-grid-row [data]="item" [columns]="columnDefintions"></tr>
+        }
+    </tbody>
+</table>

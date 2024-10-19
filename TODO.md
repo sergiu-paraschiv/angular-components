@@ -25,11 +25,10 @@
         - table cell, receives data and column definition from parent table row
     [-] Decide what services and components are neeed
         - `t-grid` and `t-column` public components
-        - `t-grid-header`, `t-grid-row`, `t-grid-cell` internal components
+        - `t-grid-header`, `t-grid-row` internal components
         - `t-grid-page-size` and `t-grid-pagination` internal components
         - ?
     [-] Document list of tests
-        - `t-column` definitions are correctly loaded into `t-table`
         - `t-grid` handles data passed in as `T[]`
         - `pagination: null` disables pagination controls
         - `t-grid` handles data passed in as `Observable<T[]>`
