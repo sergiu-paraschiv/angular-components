@@ -8,6 +8,7 @@ import {
   AfterContentChecked,
   Output,
   EventEmitter,
+  booleanAttribute,
 } from '@angular/core';
 import {
   TGridRowComponent,
@@ -27,7 +28,10 @@ export interface Sort {
   direction: Direction;
 }
 
-export type SortChangeEvent = Sort
+export type SortChangeEvent = {
+  property: string;
+  direction: Direction;
+};
 
 @Component({
   selector: 't-grid',
@@ -42,6 +46,7 @@ export class TGridComponent<T extends TGridRowData>
 {
   @ContentChildren(TColumnBase) private columns!: QueryList<TColumnBase>;
   @Input({ required: true }) data: T[] = [];
+  @Input({ transform: booleanAttribute }) sortable: boolean = true;
 
   @Output() sortChange = new EventEmitter<SortChangeEvent>();
 
@@ -49,7 +54,13 @@ export class TGridComponent<T extends TGridRowData>
   sort: Sort = { property: undefined, direction: Direction.Ascending };
 
   onColumnClick(columnName: string) {
-    const columnDefinition = this.columnDefintions.find(columnDefinition => columnDefinition.name === columnName);
+    if (!this.sortable) {
+      return;
+    }
+
+    const columnDefinition = this.columnDefintions.find(
+      (columnDefinition) => columnDefinition.name === columnName
+    );
     if (!columnDefinition || !columnDefinition?.sortable) {
       return;
     }

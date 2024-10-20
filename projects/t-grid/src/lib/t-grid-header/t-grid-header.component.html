@@ -1,9 +1,10 @@
 @for (column of columns; track $index) {
     <th>
-        @if (column.sortable) {
+        @if (!disableSort && column.sortable) {
+            @let sortState = getColumnSortState(column);
             <button
-                (click)="onColumnClick($event, column)"
-                [class]="getColumnSortClass(column)"
+                (click)="onColumnClick(column)"
+                [class]="{ sortingOn: sortState.sortingOn, ascending: sortState.ascending, descending: sortState.descending }"
             >
                 {{ column.name }}
 

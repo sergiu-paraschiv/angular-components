@@ -6,7 +6,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { TGridColumnDefinition } from '../t-grid-row/t-grid-row.component';
-import { Sort } from '../t-grid/t-grid.component';
+import { Direction, Sort } from '../t-grid/t-grid.component';
 
 @Component({
   selector: '[t-grid-header]',
@@ -19,22 +19,22 @@ import { Sort } from '../t-grid/t-grid.component';
 export class TGridHeaderComponent {
   @Input({ required: true }) columns!: TGridColumnDefinition[];
   @Input({ required: true }) sort!: Sort;
+  @Input({ required: true }) disableSort!: boolean;
 
   @Output() columnClick = new EventEmitter<TGridColumnDefinition['name']>();
 
-  onColumnClick(event: MouseEvent, column: TGridColumnDefinition) {
-    event.preventDefault();
-    this.columnClick.next(column.name);
+  onColumnClick(column: TGridColumnDefinition) {
+    if (!this.disableSort) {
+      this.columnClick.next(column.name);
+    }
   }
 
-  getColumnSortClass(column: TGridColumnDefinition) {
-    const classList: string[] = [];
-
-    if (this.sort.property === column.property) {
-      classList.push('sortingOn');
-      classList.push(this.sort.direction);
-    }
-
-    return classList;
+  getColumnSortState(column: TGridColumnDefinition) {
+    const sortingOn = this.sort.property === column.property;
+    return {
+      sortingOn,
+      ascending: sortingOn && this.sort.direction === Direction.Ascending,
+      descending: sortingOn && this.sort.direction === Direction.Descending,
+    };
   }
 }

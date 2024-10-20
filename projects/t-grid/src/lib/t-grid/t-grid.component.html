@@ -1,10 +1,20 @@
 <table>
     <thead>
-        <tr t-grid-header [columns]="columnDefintions" [sort]="sort" (columnClick)="onColumnClick($event)"></tr>
+        <tr
+            t-grid-header
+            [columns]="columnDefintions"
+            [sort]="sort"
+            [disableSort]="!sortable"
+            (columnClick)="onColumnClick($event)"
+        ></tr>
     </thead>
     <tbody>
         @for (item of data; track $index) {
-            <tr t-grid-row [data]="item" [columns]="columnDefintions"></tr>
+            <tr
+                t-grid-row
+                [data]="item"
+                [columns]="columnDefintions"
+            ></tr>
         }
     </tbody>
 </table>

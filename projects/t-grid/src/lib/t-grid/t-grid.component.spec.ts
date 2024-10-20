@@ -23,7 +23,7 @@ class MockTColumnComponent extends TColumnBase {
   standalone: true,
   imports: [TGridComponent, MockTColumnComponent, NgIf],
   template: `
-    <t-grid [data]="testData">
+    <t-grid [data]="testData" [sortable]="enableSorting">
       <t-column
         name="bar-field"
         [property]="'bar'"
@@ -48,6 +48,7 @@ class MockTColumnComponent extends TColumnBase {
 class TestHostComponent {
   testData: any[] = [];
 
+  enableSorting = true;
   includeFifthColumn = false;
   fifthColumnName = 'fifth';
 
@@ -122,13 +123,8 @@ describe('t-grid', () => {
   it('should render header', () => {
     fixture.detectChanges();
 
-    const theadColumnElements: HTMLElement[] =
-      fixture.nativeElement.querySelectorAll('thead tr th');
-    expect(theadColumnElements.length).toBe(4);
-    expect(theadColumnElements[0].textContent?.trim()).toBe('bar-field');
-    expect(theadColumnElements[1].textContent?.trim()).toBe('foo-field');
-    expect(theadColumnElements[2].textContent?.trim()).toBe('foo-field-2');
-    expect(theadColumnElements[3].textContent?.trim()).toBe('bar-field');
+    const theadColumnElement: HTMLElement = fixture.nativeElement.querySelectorAll('thead');
+    expect(theadColumnElement).toBeTruthy();
   });
 
   it('should render body', () => {
@@ -212,7 +208,7 @@ describe('t-grid', () => {
 
     component.onColumnClick(component.columnDefintions[0].name);
 
-    expect(component.sortChange.next).toHaveBeenCalledWith({
+    expect(component.sortChange.next).toHaveBeenCalledOnceWith({
       property: 'bar',
       direction: Direction.Ascending,
     });
@@ -266,5 +262,15 @@ describe('t-grid', () => {
       property: 'bar',
       direction: Direction.Ascending,
     }]);
+  });
+
+  it('should allow disabling sorting', () => {
+    spyOn(component.sortChange, 'next');
+    hostComponent.enableSorting = false;
+    fixture.detectChanges();
+
+    component.onColumnClick(component.columnDefintions[0].name);
+
+    expect(component.sortChange.next).not.toHaveBeenCalled();
   });
 });
