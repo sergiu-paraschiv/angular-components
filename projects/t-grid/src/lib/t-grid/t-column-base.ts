@@ -1,5 +1,5 @@
-export class TColumnBase {
-    name: string = '';
-    property: string = '';
-    sortable?: boolean;
+export abstract class TColumnBase {
+  name: string = '';
+  property: string = '';
+  sortable?: boolean;
 }

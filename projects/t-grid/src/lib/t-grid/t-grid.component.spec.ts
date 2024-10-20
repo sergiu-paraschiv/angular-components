@@ -2,21 +2,18 @@ import { Component, Input, booleanAttribute, Inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TGridComponent } from './t-grid.component';
-import { ITColumn, T_COLUMN } from './t-column-base';
+import { TColumnBase } from './t-column-base';
 
 @Component({
   selector: 't-column',
   standalone: true,
-  imports: []
+  template: ``,
+  providers: [{ provide: TColumnBase, useExisting: MockTColumnComponent }]
 })
-class MockTColumnComponent implements ITColumn {
-  @Input({required: true}) name = '';
-  @Input({required: true}) property = '';
-  @Input({transform: booleanAttribute}) sortable = false;
-
-  constructor(@Inject(T_COLUMN) private col: ITColumn) {
-
-  }
+class MockTColumnComponent extends TColumnBase {
+  @Input({required: true}) override name = '';
+  @Input({required: true}) override property = '';
+  @Input({transform: booleanAttribute}) override sortable = false;
 
   public avoidCollisionMockTarget1() {}
 }
@@ -57,7 +54,7 @@ describe('TGridComponent', () => {
 
   it('should query column definitions', () => {
     fixture.detectChanges();
-    console.log(component);
+
     expect(component.columns.length).toBe(4);
 
     expect(component.columnDefintions[0].name).toBe('bar-field'); 
