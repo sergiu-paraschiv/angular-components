@@ -102,4 +102,18 @@ describe('TGridComponent', () => {
     fixture.detectChanges();
     expect(component.columnDefintions.length).toBe(4);
   });
+
+  it('should render header' ,() => {
+    fixture.detectChanges();
+
+    const theadElement: HTMLElement = fixture.nativeElement.querySelector('thead');
+    expect(theadElement.childNodes.length).toBe(1);
+
+    const theadColumnElements: HTMLElement[] = fixture.nativeElement.querySelectorAll('thead tr th');
+    expect(theadColumnElements.length).toBe(4);
+    expect(theadColumnElements[0].textContent).toBe('bar-field');
+    expect(theadColumnElements[1].textContent).toBe('foo-field');
+    expect(theadColumnElements[2].textContent).toBe('foo-field-2');
+    expect(theadColumnElements[3].textContent).toBe('bar-field');
+  });
 });
