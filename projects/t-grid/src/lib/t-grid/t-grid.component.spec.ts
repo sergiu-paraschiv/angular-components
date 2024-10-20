@@ -9,12 +9,12 @@ import { TColumnBase } from './t-column-base';
   selector: 't-column',
   standalone: true,
   template: ``,
-  providers: [{ provide: TColumnBase, useExisting: MockTColumnComponent }]
+  providers: [{ provide: TColumnBase, useExisting: MockTColumnComponent }],
 })
 class MockTColumnComponent extends TColumnBase {
-  @Input({required: true}) override name = '';
-  @Input({required: true}) override property = '';
-  @Input({transform: booleanAttribute}) override sortable = false;
+  @Input({ required: true }) override name = '';
+  @Input({ required: true }) override property = '';
+  @Input({ transform: booleanAttribute }) override sortable = false;
 
   public avoidCollisionMockTarget1() {}
 }
@@ -23,33 +23,48 @@ class MockTColumnComponent extends TColumnBase {
   standalone: true,
   imports: [TGridComponent, MockTColumnComponent, NgIf],
   template: `
-<t-grid [data]="testData">
-  <t-column name="bar-field" [property]="'bar'" [sortable]="true"></t-column>
-  <t-column name="foo-field" property="foo"></t-column>
-  <t-column name="foo-field-2" property="foo" [sortable]="true"></t-column>
-  <t-column name="bar-field" [property]="'bar'" [sortable]="false"></t-column>
+    <t-grid [data]="testData">
+      <t-column
+        name="bar-field"
+        [property]="'bar'"
+        [sortable]="true"
+      ></t-column>
+      <t-column name="foo-field" property="foo"></t-column>
+      <t-column name="foo-field-2" property="foo" [sortable]="true"></t-column>
+      <t-column
+        name="bar-field"
+        [property]="'bar'"
+        [sortable]="false"
+      ></t-column>
 
-  <t-column *ngIf="includeFifthColumn" name="{{ fifthColumnName }}" [property]="'fifth'"></t-column>
-</t-grid>
-`,
+      <t-column
+        *ngIf="includeFifthColumn"
+        name="{{ fifthColumnName }}"
+        [property]="'fifth'"
+      ></t-column>
+    </t-grid>
+  `,
 })
 class TestHostComponent {
-  @Input({required: true}) testData: any[] = [];
+  testData: any[] = [];
 
   includeFifthColumn = false;
   fifthColumnName = 'fifth';
+
+  pushThirdRow() {
+    this.testData.push({ foo: 5, bar: 4 });
+  }
 }
 
-describe('TGridComponent', () => {
+describe('t-grid', () => {
   let hostComponent: TestHostComponent;
   let component: TGridComponent<any>;
   let fixture: ComponentFixture<TestHostComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TestHostComponent, TGridComponent, MockTColumnComponent]
-    })
-    .compileComponents();
+      imports: [TestHostComponent, TGridComponent, MockTColumnComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(TestHostComponent);
     hostComponent = fixture.componentInstance;
@@ -64,24 +79,24 @@ describe('TGridComponent', () => {
     fixture.detectChanges();
     expect(component.columnDefintions.length).toBe(4);
 
-    expect(component.columnDefintions[0].name).toBe('bar-field'); 
-    expect(component.columnDefintions[0].property).toBe('bar'); 
-    expect(component.columnDefintions[0].sortable).toBeTrue(); 
+    expect(component.columnDefintions[0].name).toBe('bar-field');
+    expect(component.columnDefintions[0].property).toBe('bar');
+    expect(component.columnDefintions[0].sortable).toBeTrue();
 
     // allow multiple columns
-    expect(component.columnDefintions[1].name).toBe('foo-field'); 
-    expect(component.columnDefintions[1].property).toBe('foo'); 
-    expect(component.columnDefintions[1].sortable).toBeFalse(); 
+    expect(component.columnDefintions[1].name).toBe('foo-field');
+    expect(component.columnDefintions[1].property).toBe('foo');
+    expect(component.columnDefintions[1].sortable).toBeFalse();
 
     // allow same property to be used in multiple columns
-    expect(component.columnDefintions[2].name).toBe('foo-field-2'); 
-    expect(component.columnDefintions[2].property).toBe('foo'); 
-    expect(component.columnDefintions[2].sortable).toBeTrue(); 
+    expect(component.columnDefintions[2].name).toBe('foo-field-2');
+    expect(component.columnDefintions[2].property).toBe('foo');
+    expect(component.columnDefintions[2].sortable).toBeTrue();
 
     // allow same property to be used in multiple columns with same name
-    expect(component.columnDefintions[3].name).toBe('bar-field'); 
-    expect(component.columnDefintions[3].property).toBe('bar'); 
-    expect(component.columnDefintions[3].sortable).toBeFalse(); 
+    expect(component.columnDefintions[3].name).toBe('bar-field');
+    expect(component.columnDefintions[3].property).toBe('bar');
+    expect(component.columnDefintions[3].sortable).toBeFalse();
   });
 
   it('should react to column definition changes', () => {
@@ -91,29 +106,103 @@ describe('TGridComponent', () => {
     hostComponent.includeFifthColumn = true;
     fixture.detectChanges();
     expect(component.columnDefintions.length).toBe(5);
-    expect(component.columnDefintions[4].name).toBe('fifth'); 
+    expect(component.columnDefintions[4].name).toBe('fifth');
 
-    
     hostComponent.fifthColumnName = 'other-name';
     fixture.detectChanges();
-    expect(component.columnDefintions[4].name).toBe(hostComponent.fifthColumnName); 
+    expect(component.columnDefintions[4].name).toBe(
+      hostComponent.fifthColumnName
+    );
 
     hostComponent.includeFifthColumn = false;
     fixture.detectChanges();
     expect(component.columnDefintions.length).toBe(4);
   });
 
-  it('should render header' ,() => {
+  it('should render header', () => {
     fixture.detectChanges();
 
-    const theadElement: HTMLElement = fixture.nativeElement.querySelector('thead');
-    expect(theadElement.childNodes.length).toBe(1);
-
-    const theadColumnElements: HTMLElement[] = fixture.nativeElement.querySelectorAll('thead tr th');
+    const theadColumnElements: HTMLElement[] =
+      fixture.nativeElement.querySelectorAll('thead tr th');
     expect(theadColumnElements.length).toBe(4);
     expect(theadColumnElements[0].textContent).toBe('bar-field');
     expect(theadColumnElements[1].textContent).toBe('foo-field');
     expect(theadColumnElements[2].textContent).toBe('foo-field-2');
     expect(theadColumnElements[3].textContent).toBe('bar-field');
+  });
+
+  it('should render body', () => {
+    hostComponent.testData = [
+      { foo: 1, bar: 0 },
+      { foo: 3, bar: 2 },
+    ];
+    fixture.detectChanges();
+
+    const tbodyRowElements: HTMLElement[] =
+      fixture.nativeElement.querySelectorAll('tbody tr');
+    expect(tbodyRowElements.length).toBe(2);
+
+    const cellElements: HTMLElement[] =
+      fixture.nativeElement.querySelectorAll('tbody tr td');
+    expect(cellElements.length).toBe(8);
+    expect(cellElements[0].textContent).toBe('0');
+    expect(cellElements[1].textContent).toBe('1');
+    expect(cellElements[2].textContent).toBe('1');
+    expect(cellElements[3].textContent).toBe('0');
+    expect(cellElements[4].textContent).toBe('2');
+    expect(cellElements[5].textContent).toBe('3');
+    expect(cellElements[6].textContent).toBe('3');
+    expect(cellElements[7].textContent).toBe('2');
+  });
+
+  it('should render empty cells for unknown fields', () => {
+    hostComponent.testData = [{ foo: 0 }];
+    fixture.detectChanges();
+
+    const cellElements: HTMLElement[] =
+      fixture.nativeElement.querySelectorAll('tbody tr td');
+    expect(cellElements.length).toBe(4);
+    expect(cellElements[0].textContent).toBe('');
+    expect(cellElements[1].textContent).toBe('0');
+  });
+
+  it('should render empty cells for fields explicitly set to undefined', () => {
+    hostComponent.testData = [{ bar: undefined }];
+    fixture.detectChanges();
+
+    const cellElements: HTMLElement[] =
+      fixture.nativeElement.querySelectorAll('tbody tr td');
+    expect(cellElements.length).toBe(4);
+    expect(cellElements[0].textContent).toBe('');
+  });
+
+  it('should react to data changes', () => {
+    hostComponent.testData = [{ bar: 1 }];
+    fixture.detectChanges();
+
+    const cellElements: HTMLElement[] =
+      fixture.nativeElement.querySelectorAll('tbody tr td');
+    expect(cellElements.length).toBe(4);
+    expect(cellElements[0].textContent).toBe('1');
+
+    hostComponent.testData = [{ bar: 2 }];
+    fixture.detectChanges();
+
+    expect(cellElements[0].textContent).toBe('2');
+  });
+
+  it('should react to data changes only when reference is changed, because of OnPush strategy', () => {
+    hostComponent.testData = [{ bar: 1 }];
+    fixture.detectChanges();
+
+    const cellElements: HTMLElement[] =
+      fixture.nativeElement.querySelectorAll('tbody tr td');
+    expect(cellElements.length).toBe(4);
+    expect(cellElements[0].textContent).toBe('1');
+
+    hostComponent.testData[0].bar = 2;
+    fixture.detectChanges();
+
+    expect(cellElements[0].textContent).toBe('1');
   });
 });
