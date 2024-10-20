@@ -8,9 +8,8 @@ describe('TGridPaginatorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TGridPaginatorComponent]
-    })
-    .compileComponents();
+      imports: [TGridPaginatorComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(TGridPaginatorComponent);
     component = fixture.componentInstance;
@@ -22,4 +21,6 @@ describe('TGridPaginatorComponent', () => {
 
     expect(component).toBeTruthy();
   });
+
+  // TODO: add rendered HTML tests
 });

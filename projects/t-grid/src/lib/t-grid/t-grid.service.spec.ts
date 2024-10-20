@@ -65,7 +65,7 @@ describe('TGridService', () => {
   });
 
   it('should paginate', () => {
-    service.data = [{foo: 1}, {foo: 2}, {foo: 3}];
+    service.data = [{ foo: 1 }, { foo: 2 }, { foo: 3 }];
     service.onPageSizeChange(2);
 
     expect(service.onPaginationPageChange(PaginatorDirection.Next)).toBeTrue();
@@ -87,7 +87,7 @@ describe('TGridService', () => {
   });
 
   it('should preserve currentPage unless new page size is out of bounds', () => {
-    service.data = [{foo: 1}, {foo: 2}, {foo: 3}, {foo: 4}];
+    service.data = [{ foo: 1 }, { foo: 2 }, { foo: 3 }, { foo: 4 }];
 
     service.onPageSizeChange(2);
     expect(service.pagination.pageSize).toBe(2);
@@ -104,7 +104,7 @@ describe('TGridService', () => {
   });
 
   it('should not paginate if pageSize is null', () => {
-    service.data = [{foo: 1}, {foo: 2}, {foo: 3}, {foo: 4}];
+    service.data = [{ foo: 1 }, { foo: 2 }, { foo: 3 }, { foo: 4 }];
 
     expect(service.onPaginationPageChange(PaginatorDirection.Next)).toBeFalse();
     expect(service.pagination.currentPage).toBe(0);
@@ -114,7 +114,7 @@ describe('TGridService', () => {
   });
 
   it('should not paginate outside of bounds', () => {
-    service.data = [{foo: 1}, {foo: 2}];
+    service.data = [{ foo: 1 }, { foo: 2 }];
     service.onPageSizeChange(1);
 
     expect(service.onPaginationPageChange(PaginatorDirection.Next)).toBeTrue();
@@ -131,16 +131,16 @@ describe('TGridService', () => {
   });
 
   it('should expose paginated data', () => {
-    service.data = [{foo: 1}, {foo: 2}];
+    service.data = [{ foo: 1 }, { foo: 2 }];
     service.onPageSizeChange(1);
 
-    expect(service.getVisibleData()).toEqual([{foo: 1}]);
+    expect(service.getVisibleData()).toEqual([{ foo: 1 }]);
     expect(service.onPaginationPageChange(PaginatorDirection.Next)).toBeTrue();
-    expect(service.getVisibleData()).toEqual([{foo: 2}]);
+    expect(service.getVisibleData()).toEqual([{ foo: 2 }]);
   });
 
   it('should expose pagination metadata', () => {
-    service.data = [{foo: 1}, {foo: 2}];
+    service.data = [{ foo: 1 }, { foo: 2 }];
     service.onPageSizeChange(1);
 
     expect(service.getPaginationMetadata().hasNext).toBeTrue();

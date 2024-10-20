@@ -93,7 +93,7 @@ describe('t-grid', () => {
         hasNext: false,
         startIndex: 0,
         endIndex: 0,
-      })
+      }),
     };
 
     await TestBed.configureTestingModule({

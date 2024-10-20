@@ -15,9 +15,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { TColumnBase } from './t-column-base';
-import {
-  TGridRowComponent
-} from '../t-grid-row/t-grid-row.component';
+import { TGridRowComponent } from '../t-grid-row/t-grid-row.component';
 import { TGridHeaderComponent } from '../t-grid-header/t-grid-header.component';
 import { TGridPaginatorComponent } from '../t-grid-paginator/t-grid-paginator.component';
 import {

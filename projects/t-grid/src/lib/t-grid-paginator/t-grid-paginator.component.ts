@@ -1,9 +1,4 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-} from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgForOf } from '@angular/common';
 import { PaginatorDirection } from '../t-grid/t-grid.service';
@@ -25,19 +20,13 @@ export class TGridPaginatorComponent {
   @Output() paginatorClick = new EventEmitter<PaginatorDirection>();
   @Output() pageSizeChange = new EventEmitter<number>();
 
-  readonly PAGE_SIZES = [
-    2,3,4,5,
-    10,
-    25,
-    50,
-    100
-  ];
+  readonly PAGE_SIZES = [2, 3, 4, 5, 10, 25, 50, 100];
 
   onPrevClick() {
     this.paginatorClick.next(PaginatorDirection.Prev);
   }
 
-  onNextClick() { 
+  onNextClick() {
     this.paginatorClick.next(PaginatorDirection.Next);
   }
 
