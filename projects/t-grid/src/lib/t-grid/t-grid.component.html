@@ -2,19 +2,36 @@
     <thead>
         <tr
             t-grid-header
-            [columns]="columnDefintions"
-            [sort]="sort"
-            [disableSort]="!sortable"
+            [columns]="gridService.columnDefintions"
+            [sort]="gridService.sort"
+            [disableSort]="gridService.disableSort"
             (columnClick)="onColumnClick($event)"
         ></tr>
     </thead>
     <tbody>
-        @for (item of data; track $index) {
+        @for (item of gridService.getVisibleData(); track $index) {
             <tr
                 t-grid-row
                 [data]="item"
-                [columns]="columnDefintions"
+                [columns]="gridService.columnDefintions"
             ></tr>
         }
     </tbody>
+    <tfoot>
+        <tr>
+            <td colSpan="{{ gridService.columnDefintions.length }}">
+                @let metadata = gridService.getPaginationMetadata();
+                <t-grid-paginator
+                    [pageSize]="metadata.pageSize"
+                    [totalItems]="metadata.totalItems"
+                    [hasPrev]="metadata.hasPrev"
+                    [hasNext]="metadata.hasNext"
+                    [startIndex]="metadata.startIndex"
+                    [endIndex]="metadata.endIndex"
+                    (paginatorClick)="onPaginatorClick($event)"
+                    (pageSizeChange)="onPageSizeChange($event)"
+                ></t-grid-paginator>
+            </td>
+        </tr>
+    </tfoot>
 </table>

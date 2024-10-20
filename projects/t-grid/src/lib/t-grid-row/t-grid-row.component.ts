@@ -1,14 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-
-export interface TGridRowData {
-  [key: string]: any;
-}
-
-export interface TGridColumnDefinition {
-  name: string;
-  property: string;
-  sortable?: boolean;
-}
+import { ColumnDefinition, TGridRowData } from '../t-grid/t-grid.service';
 
 @Component({
   selector: '[t-grid-row]',
@@ -19,5 +10,5 @@ export interface TGridColumnDefinition {
 })
 export class TGridRowComponent {
   @Input({ required: true }) data!: TGridRowData;
-  @Input({ required: true }) columns!: TGridColumnDefinition[];
+  @Input({ required: true }) columns!: ColumnDefinition[];
 }

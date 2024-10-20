@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TGridHeaderComponent } from './t-grid-header.component';
-import { Direction } from '../t-grid/t-grid.component';
+import { Direction } from '../t-grid/t-grid.service';
 
 describe('t-grid-header', () => {
   let component: TGridHeaderComponent;

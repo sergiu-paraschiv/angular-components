@@ -5,8 +5,7 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { TGridColumnDefinition } from '../t-grid-row/t-grid-row.component';
-import { Direction, Sort } from '../t-grid/t-grid.component';
+import { ColumnDefinition, Direction, Sort } from '../t-grid/t-grid.service';
 
 @Component({
   selector: '[t-grid-header]',
@@ -17,19 +16,19 @@ import { Direction, Sort } from '../t-grid/t-grid.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TGridHeaderComponent {
-  @Input({ required: true }) columns!: TGridColumnDefinition[];
+  @Input({ required: true }) columns!: ColumnDefinition[];
   @Input({ required: true }) sort!: Sort;
   @Input({ required: true }) disableSort!: boolean;
 
-  @Output() columnClick = new EventEmitter<TGridColumnDefinition['name']>();
+  @Output() columnClick = new EventEmitter<ColumnDefinition['name']>();
 
-  onColumnClick(column: TGridColumnDefinition) {
+  onColumnClick(column: ColumnDefinition) {
     if (!this.disableSort) {
       this.columnClick.next(column.name);
     }
   }
 
-  getColumnSortState(column: TGridColumnDefinition) {
+  getColumnSortState(column: ColumnDefinition) {
     const sortingOn = this.sort.property === column.property;
     return {
       sortingOn,
