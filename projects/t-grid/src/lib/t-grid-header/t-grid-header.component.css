@@ -1,0 +1,24 @@
+th {
+
+}
+
+    th button {
+        cursor: pointer;
+    }
+
+        th button svg {
+            opacity: 0;
+            width: 24px;
+            height: 24px;
+
+            transform: rotate(180deg);
+        }
+
+            th button.descending svg {
+                transform: rotate(0deg);
+            }
+
+            th button:hover svg,
+            th button.sortingOn svg {
+                opacity: 1;
+            }

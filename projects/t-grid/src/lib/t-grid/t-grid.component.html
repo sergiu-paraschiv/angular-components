@@ -1,6 +1,6 @@
 <table>
     <thead>
-        <tr t-grid-header [columns]="columnDefintions"></tr>
+        <tr t-grid-header [columns]="columnDefintions" [sort]="sort" (columnClick)="onColumnClick($event)"></tr>
     </thead>
     <tbody>
         @for (item of data; track $index) {

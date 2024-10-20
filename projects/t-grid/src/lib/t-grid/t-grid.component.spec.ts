@@ -2,7 +2,7 @@ import { Component, Input, booleanAttribute } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TGridComponent } from './t-grid.component';
+import { Direction, TGridComponent } from './t-grid.component';
 import { TColumnBase } from './t-column-base';
 
 @Component({
@@ -125,10 +125,10 @@ describe('t-grid', () => {
     const theadColumnElements: HTMLElement[] =
       fixture.nativeElement.querySelectorAll('thead tr th');
     expect(theadColumnElements.length).toBe(4);
-    expect(theadColumnElements[0].textContent).toBe('bar-field');
-    expect(theadColumnElements[1].textContent).toBe('foo-field');
-    expect(theadColumnElements[2].textContent).toBe('foo-field-2');
-    expect(theadColumnElements[3].textContent).toBe('bar-field');
+    expect(theadColumnElements[0].textContent?.trim()).toBe('bar-field');
+    expect(theadColumnElements[1].textContent?.trim()).toBe('foo-field');
+    expect(theadColumnElements[2].textContent?.trim()).toBe('foo-field-2');
+    expect(theadColumnElements[3].textContent?.trim()).toBe('bar-field');
   });
 
   it('should render body', () => {
@@ -204,5 +204,67 @@ describe('t-grid', () => {
     fixture.detectChanges();
 
     expect(cellElements[0].textContent).toBe('1');
+  });
+
+  it('should emit SortChangeEvent', () => {
+    spyOn(component.sortChange, 'next');
+    fixture.detectChanges();
+
+    component.onColumnClick(component.columnDefintions[0].name);
+
+    expect(component.sortChange.next).toHaveBeenCalledWith({
+      property: 'bar',
+      direction: Direction.Ascending,
+    });
+  });
+
+  it('should not emit SortChangeEvent for columns that are not sortable', () => {
+    spyOn(component.sortChange, 'next');
+    fixture.detectChanges();
+
+    component.onColumnClick(component.columnDefintions[1].name);
+
+    expect(component.sortChange.next).not.toHaveBeenCalled();
+  });
+
+  it('should emit SortChangeEvent with changed direction', () => {
+    const spy = spyOn(component.sortChange, 'next');
+    fixture.detectChanges();
+
+    component.onColumnClick(component.columnDefintions[0].name);
+    component.onColumnClick(component.columnDefintions[0].name);
+
+    expect(spy.calls.count()).toEqual(2);
+    expect(spy.calls.argsFor(0)).toEqual([{
+      property: 'bar',
+      direction: Direction.Ascending,
+    }]);
+    expect(spy.calls.argsFor(1)).toEqual([{
+      property: 'bar',
+      direction: Direction.Descending,
+    }]);
+  });
+
+  it('should emit SortChangeEvent with ascending direction when field changes', () => {
+    const spy = spyOn(component.sortChange, 'next');
+    fixture.detectChanges();
+
+    component.onColumnClick(component.columnDefintions[0].name);
+    component.onColumnClick(component.columnDefintions[2].name);
+    component.onColumnClick(component.columnDefintions[0].name);
+
+    expect(spy.calls.count()).toEqual(3);
+    expect(spy.calls.argsFor(0)).toEqual([{
+      property: 'bar',
+      direction: Direction.Ascending,
+    }]);
+    expect(spy.calls.argsFor(1)).toEqual([{
+      property: 'foo',
+      direction: Direction.Ascending,
+    }]);
+    expect(spy.calls.argsFor(2)).toEqual([{
+      property: 'bar',
+      direction: Direction.Ascending,
+    }]);
   });
 });

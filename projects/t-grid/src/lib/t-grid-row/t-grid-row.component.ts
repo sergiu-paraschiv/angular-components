@@ -18,6 +18,6 @@ export interface TGridColumnDefinition {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TGridRowComponent {
-  @Input({ required: true }) data: TGridRowData = {};
-  @Input({ required: true }) columns: TGridColumnDefinition[] = [];
+  @Input({ required: true }) data!: TGridRowData;
+  @Input({ required: true }) columns!: TGridColumnDefinition[];
 }

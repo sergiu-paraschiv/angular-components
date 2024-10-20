@@ -1,6 +1,6 @@
-<t-grid [data]="demoData">
+<t-grid [data]="demoData" (sortChange)="onSortChange($event)">
     <t-column name="bar-field" [property]="'bar'" [sortable]="true"></t-column>
-    <t-column name="foo-field" property="foo"></t-column>
+    <t-column name="foo-field" property="foo" [sortable]="true"></t-column>
     <t-column name="foo-field-2" property="foo" [sortable]="true"></t-column>
     <t-column name="bar-field" [property]="'bar'" [sortable]="false"></t-column>
 </t-grid>
