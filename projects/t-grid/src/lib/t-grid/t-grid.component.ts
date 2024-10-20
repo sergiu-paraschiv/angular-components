@@ -27,7 +27,7 @@ import {
 } from './t-grid.service';
 
 export type SortChangeEvent = {
-  property: string;
+  columnName: string;
   direction: Direction;
 };
 
@@ -103,13 +103,10 @@ export class TGridComponent<T extends TGridRowData>
 
   onColumnClick(columnName: string) {
     if (this.gridService.onColumnSort(columnName)) {
-      const property = this.gridService.sort.property;
-      if (property) {
-        this.sortChange.next({
-          ...this.gridService.sort,
-          property,
-        });
-      }
+      this.sortChange.next({
+        direction: this.gridService.sort.direction,
+        columnName,
+      });
     }
   }
 

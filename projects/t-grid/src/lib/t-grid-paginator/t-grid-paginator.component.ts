@@ -17,7 +17,7 @@ import { PaginatorDirection } from '../t-grid/t-grid.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TGridPaginatorComponent {
-  @Input() pageSize: number = 0;
+  @Input() pageSize: number | null = null;
   @Input() totalItems: number = 0;
   @Input() hasPrev: boolean = false;
   @Input() hasNext: boolean = false;

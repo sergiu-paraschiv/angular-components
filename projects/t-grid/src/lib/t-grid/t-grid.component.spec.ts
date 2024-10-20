@@ -244,7 +244,7 @@ describe('t-grid', () => {
     component.onColumnClick(component.gridService.columnDefintions[0].name);
 
     expect(component.sortChange.next).toHaveBeenCalledOnceWith({
-      property: 'bar',
+      columnName: 'bar-field',
       direction: Direction.Ascending,
     });
   });
