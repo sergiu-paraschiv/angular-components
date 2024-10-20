@@ -1,4 +1,5 @@
-import { Component, Input, booleanAttribute, Inject } from '@angular/core';
+import { Component, Input, booleanAttribute } from '@angular/core';
+import { NgIf } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TGridComponent } from './t-grid.component';
@@ -20,21 +21,27 @@ class MockTColumnComponent extends TColumnBase {
 
 @Component({
   standalone: true,
-  imports: [TGridComponent, MockTColumnComponent],
+  imports: [TGridComponent, MockTColumnComponent, NgIf],
   template: `
 <t-grid [data]="testData">
   <t-column name="bar-field" [property]="'bar'" [sortable]="true"></t-column>
   <t-column name="foo-field" property="foo"></t-column>
   <t-column name="foo-field-2" property="foo" [sortable]="true"></t-column>
   <t-column name="bar-field" [property]="'bar'" [sortable]="false"></t-column>
+
+  <t-column *ngIf="includeFifthColumn" name="{{ fifthColumnName }}" [property]="'fifth'"></t-column>
 </t-grid>
 `,
 })
 class TestHostComponent {
   @Input({required: true}) testData: any[] = [];
+
+  includeFifthColumn = false;
+  fifthColumnName = 'fifth';
 }
 
 describe('TGridComponent', () => {
+  let hostComponent: TestHostComponent;
   let component: TGridComponent<any>;
   let fixture: ComponentFixture<TestHostComponent>;
 
@@ -45,6 +52,7 @@ describe('TGridComponent', () => {
     .compileComponents();
 
     fixture = TestBed.createComponent(TestHostComponent);
+    hostComponent = fixture.componentInstance;
     component = fixture.debugElement.children[0].componentInstance;
   });
 
@@ -54,8 +62,7 @@ describe('TGridComponent', () => {
 
   it('should query column definitions', () => {
     fixture.detectChanges();
-
-    expect(component.columns.length).toBe(4);
+    expect(component.columnDefintions.length).toBe(4);
 
     expect(component.columnDefintions[0].name).toBe('bar-field'); 
     expect(component.columnDefintions[0].property).toBe('bar'); 
@@ -75,5 +82,24 @@ describe('TGridComponent', () => {
     expect(component.columnDefintions[3].name).toBe('bar-field'); 
     expect(component.columnDefintions[3].property).toBe('bar'); 
     expect(component.columnDefintions[3].sortable).toBeFalse(); 
+  });
+
+  it('should react to column definition changes', () => {
+    fixture.detectChanges();
+    expect(component.columnDefintions.length).toBe(4);
+
+    hostComponent.includeFifthColumn = true;
+    fixture.detectChanges();
+    expect(component.columnDefintions.length).toBe(5);
+    expect(component.columnDefintions[4].name).toBe('fifth'); 
+
+    
+    hostComponent.fifthColumnName = 'other-name';
+    fixture.detectChanges();
+    expect(component.columnDefintions[4].name).toBe(hostComponent.fifthColumnName); 
+
+    hostComponent.includeFifthColumn = false;
+    fixture.detectChanges();
+    expect(component.columnDefintions.length).toBe(4);
   });
 });
