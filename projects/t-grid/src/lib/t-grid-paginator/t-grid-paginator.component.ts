@@ -1,4 +1,10 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgForOf } from '@angular/common';
 import { PaginatorDirection } from '../t-grid/t-grid.service';
@@ -8,6 +14,7 @@ import { PaginatorDirection } from '../t-grid/t-grid.service';
   standalone: true,
   imports: [FormsModule, NgForOf],
   templateUrl: './t-grid-paginator.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TGridPaginatorComponent {
   @Input() pageSize: number = 0;
