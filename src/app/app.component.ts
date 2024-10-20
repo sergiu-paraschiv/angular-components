@@ -3,7 +3,7 @@ import { TGridComponent, TColumnComponent, SortChangeEvent, PaginationChangeEven
 import { TProgressComponent } from 't-progress';
 
 const TEST_DATA: any[] = [];
-for (let i = 1; i < 97; i++) {
+for (let i = 1; i < 5; i++) {
   TEST_DATA.push({ index: i, age: Math.ceil(Math.random() * 70) });
 }
 

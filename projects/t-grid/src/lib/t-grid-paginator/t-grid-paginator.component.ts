@@ -5,12 +5,13 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { PaginatorDirection, PaginationMetadata } from '../t-grid/t-grid.service';
+import { NgForOf } from '@angular/common';
+import { PaginatorDirection } from '../t-grid/t-grid.service';
 
 @Component({
   selector: 't-grid-paginator',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, NgForOf],
   templateUrl: './t-grid-paginator.component.html',
 })
 export class TGridPaginatorComponent {
@@ -25,6 +26,7 @@ export class TGridPaginatorComponent {
   @Output() pageSizeChange = new EventEmitter<number>();
 
   readonly PAGE_SIZES = [
+    2,3,4,5,
     10,
     25,
     50,
@@ -39,7 +41,7 @@ export class TGridPaginatorComponent {
     this.paginatorClick.next(PaginatorDirection.Next);
   }
 
-  onPageSizeChange(pageSize: number) {
-    this.pageSizeChange.next(pageSize);
+  onPageSizeChange(pageSize: string) {
+    this.pageSizeChange.next(parseInt(pageSize, 10) || 0);
   }
 }

@@ -75,23 +75,6 @@ export class TGridService<T extends TGridRowData> {
     return true;
   }
 
-  onPaginationPageChange(paginatorDirection: PaginatorDirection) {
-    if (!this.pagination.pageSize) {
-      return;
-    }
-
-    const newPage =
-      this.pagination.currentPage +
-      (paginatorDirection === PaginatorDirection.Next ? 1 : -1);
-
-    const newPagination = {
-      ...this.pagination,
-      currentPage: newPage,
-    };
-
-    this.pagination = newPagination;
-  }
-
   onPageSizeChange(pageSize: number | null) {
     if (pageSize === null) {
       this.pagination = {
@@ -105,16 +88,49 @@ export class TGridService<T extends TGridRowData> {
       };
 
       if (
-        newPagination.currentPage * newPagination.pageSize >
-        this.data.length
+        this.data.length > 0 &&
+        newPagination.currentPage * newPagination.pageSize >= this.data.length
       ) {
-        const lastPage =
-          Math.ceil(this.data.length / newPagination.pageSize) - 1;
-        newPagination.currentPage = lastPage;
+        newPagination.currentPage = this.getLastPageIndex(
+          this.data.length,
+          newPagination.pageSize
+        );
       }
 
       this.pagination = newPagination;
     }
+  }
+
+  onPaginationPageChange(paginatorDirection: PaginatorDirection) {
+    if (this.pagination.pageSize === null) {
+      return false;
+    }
+
+    const paginationMetadata = this.getPaginationMetadata();
+    if (
+      paginatorDirection === PaginatorDirection.Next &&
+      !paginationMetadata.hasNext
+    ) {
+      return false;
+    }
+    if (
+      paginatorDirection === PaginatorDirection.Prev &&
+      !paginationMetadata.hasPrev
+    ) {
+      return false;
+    }
+
+    const newPage =
+      this.pagination.currentPage +
+      (paginatorDirection === PaginatorDirection.Next ? 1 : -1);
+
+    const newPagination = {
+      ...this.pagination,
+      currentPage: newPage,
+    };
+
+    this.pagination = newPagination;
+    return true;
   }
 
   getSortedData() {
@@ -162,13 +178,26 @@ export class TGridService<T extends TGridRowData> {
       return metadata;
     }
 
-    const lastPage = Math.ceil(metadata.totalItems / this.pagination.pageSize) - 1;
+    const lastPage = this.getLastPageIndex(
+      metadata.totalItems,
+      this.pagination.pageSize
+    );
+
     metadata.hasPrev = this.pagination.currentPage > 0;
     metadata.hasNext = this.pagination.currentPage < lastPage;
 
-    metadata.startIndex = 1 + this.pagination.currentPage * this.pagination.pageSize;
-    metadata.endIndex = Math.min(metadata.startIndex - 1 + this.pagination.pageSize, metadata.totalItems);
-    
+    metadata.startIndex =
+      1 + this.pagination.currentPage * this.pagination.pageSize;
+
+    metadata.endIndex = Math.min(
+      metadata.startIndex - 1 + this.pagination.pageSize,
+      metadata.totalItems
+    );
+
     return metadata;
+  }
+
+  private getLastPageIndex(totalItems: number, pageSize: number) {
+    return Math.ceil(totalItems / pageSize) - 1;
   }
 }

@@ -1,4 +1,4 @@
-import { Direction, TGridService } from './t-grid.service';
+import { Direction, PaginatorDirection, TGridService } from './t-grid.service';
 
 describe('TGridService', () => {
   let service: TGridService<any>;
@@ -63,4 +63,102 @@ describe('TGridService', () => {
     expect(service.onColumnSort('foo')).toBeTrue();
     expect(service.sort.direction).toBe(Direction.Ascending);
   });
+
+  it('should paginate', () => {
+    service.data = [{foo: 1}, {foo: 2}, {foo: 3}];
+    service.onPageSizeChange(2);
+
+    expect(service.onPaginationPageChange(PaginatorDirection.Next)).toBeTrue();
+    expect(service.pagination.currentPage).toBe(1);
+
+    expect(service.onPaginationPageChange(PaginatorDirection.Next)).toBeFalse();
+    expect(service.pagination.currentPage).toBe(1);
+
+    expect(service.onPaginationPageChange(PaginatorDirection.Prev)).toBeTrue();
+    expect(service.pagination.currentPage).toBe(0);
+  });
+
+  it('should change page size', () => {
+    service.onPageSizeChange(1);
+    expect(service.pagination.pageSize).toBe(1);
+
+    service.onPageSizeChange(null);
+    expect(service.pagination.pageSize).toBeNull();
+  });
+
+  it('should preserve currentPage unless new page size is out of bounds', () => {
+    service.data = [{foo: 1}, {foo: 2}, {foo: 3}, {foo: 4}];
+
+    service.onPageSizeChange(2);
+    expect(service.pagination.pageSize).toBe(2);
+    expect(service.pagination.currentPage).toBe(0);
+
+    expect(service.onPaginationPageChange(PaginatorDirection.Next)).toBeTrue();
+    expect(service.pagination.currentPage).toBe(1);
+
+    service.onPageSizeChange(3);
+    expect(service.pagination.currentPage).toBe(1);
+
+    service.onPageSizeChange(4);
+    expect(service.pagination.currentPage).toBe(0);
+  });
+
+  it('should not paginate if pageSize is null', () => {
+    service.data = [{foo: 1}, {foo: 2}, {foo: 3}, {foo: 4}];
+
+    expect(service.onPaginationPageChange(PaginatorDirection.Next)).toBeFalse();
+    expect(service.pagination.currentPage).toBe(0);
+
+    expect(service.onPaginationPageChange(PaginatorDirection.Prev)).toBeFalse();
+    expect(service.pagination.currentPage).toBe(0);
+  });
+
+  it('should not paginate outside of bounds', () => {
+    service.data = [{foo: 1}, {foo: 2}];
+    service.onPageSizeChange(1);
+
+    expect(service.onPaginationPageChange(PaginatorDirection.Next)).toBeTrue();
+    expect(service.pagination.currentPage).toBe(1);
+
+    expect(service.onPaginationPageChange(PaginatorDirection.Next)).toBeFalse();
+    expect(service.pagination.currentPage).toBe(1);
+
+    expect(service.onPaginationPageChange(PaginatorDirection.Prev)).toBeTrue();
+    expect(service.pagination.currentPage).toBe(0);
+
+    expect(service.onPaginationPageChange(PaginatorDirection.Prev)).toBeFalse();
+    expect(service.pagination.currentPage).toBe(0);
+  });
+
+  it('should expose paginated data', () => {
+    service.data = [{foo: 1}, {foo: 2}];
+    service.onPageSizeChange(1);
+
+    expect(service.getVisibleData()).toEqual([{foo: 1}]);
+    expect(service.onPaginationPageChange(PaginatorDirection.Next)).toBeTrue();
+    expect(service.getVisibleData()).toEqual([{foo: 2}]);
+  });
+
+  it('should expose pagination metadata', () => {
+    service.data = [{foo: 1}, {foo: 2}];
+    service.onPageSizeChange(1);
+
+    expect(service.getPaginationMetadata().hasNext).toBeTrue();
+    expect(service.getPaginationMetadata().hasPrev).toBeFalse();
+    expect(service.getPaginationMetadata().startIndex).toBe(1);
+    expect(service.getPaginationMetadata().endIndex).toBe(1);
+    expect(service.getPaginationMetadata().totalItems).toBe(2);
+    expect(service.getPaginationMetadata().pageSize).toBe(1);
+
+    expect(service.onPaginationPageChange(PaginatorDirection.Next)).toBeTrue();
+
+    expect(service.getPaginationMetadata().hasNext).toBeFalse();
+    expect(service.getPaginationMetadata().hasPrev).toBeTrue();
+    expect(service.getPaginationMetadata().startIndex).toBe(2);
+    expect(service.getPaginationMetadata().endIndex).toBe(2);
+    expect(service.getPaginationMetadata().totalItems).toBe(2);
+    expect(service.getPaginationMetadata().pageSize).toBe(1);
+  });
+
+  // TODO: test sorting
 });
