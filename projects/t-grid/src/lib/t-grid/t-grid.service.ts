@@ -46,7 +46,7 @@ export class TGridService<T extends TGridRowData> {
   columnDefintions: ColumnDefinition[] = [];
   data: T[] = [];
   sort: Sort = { property: undefined, direction: Direction.Ascending };
-  pagination: Pagination = { currentPage: 0, pageSize: 0 };
+  pagination: Pagination = { currentPage: 0, pageSize: null };
   disableSort: boolean = false;
 
   onColumnSort(columnName: keyof T): boolean {
@@ -133,26 +133,6 @@ export class TGridService<T extends TGridRowData> {
     return true;
   }
 
-  getSortedData() {
-    const sortProperty = this.sort.property;
-
-    if (!sortProperty) {
-      return this.data;
-    } else {
-      const sortedData = [...this.data].sort((a, b) => {
-        const av = (a as any)[sortProperty];
-        const bv = (b as any)[sortProperty];
-        return av > bv ? 1 : av < bv ? -1 : 0;
-      });
-
-      if (this.sort.direction === Direction.Descending) {
-        sortedData.reverse();
-      }
-
-      return sortedData;
-    }
-  }
-
   getVisibleData() {
     if (this.pagination.pageSize === null) {
       return this.getSortedData();
@@ -195,6 +175,34 @@ export class TGridService<T extends TGridRowData> {
     );
 
     return metadata;
+  }
+
+  private getSortedData() {
+    const sortProperty = this.sort.property;
+
+    if (!sortProperty) {
+      return this.data;
+    } else {
+      const sortedData = [...this.data].sort((a, b) => {
+        const av = (a as any)[sortProperty];
+        const bv = (b as any)[sortProperty];
+        
+        if (typeof av === 'string') {
+          return av.localeCompare(bv);
+        }
+        else if (typeof bv === 'string') {
+          return bv.localeCompare(av) * -1;
+        }
+
+        return av > bv ? 1 : av < bv ? -1 : 0;
+      });
+
+      if (this.sort.direction === Direction.Descending) {
+        sortedData.reverse();
+      }
+
+      return sortedData;
+    }
   }
 
   private getLastPageIndex(totalItems: number, pageSize: number) {

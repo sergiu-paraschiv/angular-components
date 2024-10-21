@@ -27,7 +27,9 @@ export class TGridPaginatorComponent {
   @Output() paginatorClick = new EventEmitter<PaginatorDirection>();
   @Output() pageSizeChange = new EventEmitter<number>();
 
-  readonly PAGE_SIZES = [2, 3, 4, 5, 10, 25, 50, 100];
+  get pageSizes() {
+    return [10, 25, 50, 100];
+  };
 
   onPrevClick() {
     this.paginatorClick.next(PaginatorDirection.Prev);

@@ -10,7 +10,7 @@ describe('TGridService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should sort columns', () => {
+  it('should allow sorting on columns', () => {
     service.columnDefintions = [
       { name: 'foo', property: 'foo', sortable: true },
     ];
@@ -19,7 +19,7 @@ describe('TGridService', () => {
     expect(service.sort.direction).toBe(Direction.Ascending);
   });
 
-  it('should not sort columns if sorting is didabled', () => {
+  it('should not allow sorting on columns if sorting is didabled', () => {
     service.columnDefintions = [
       { name: 'foo', property: 'foo', sortable: true },
     ];
@@ -27,14 +27,14 @@ describe('TGridService', () => {
     expect(service.onColumnSort('foo')).toBeFalse();
   });
 
-  it('should not sort columns that are unknown', () => {
+  it('should not allow sorting on columns that are unknown', () => {
     service.columnDefintions = [
       { name: 'foo', property: 'foo', sortable: false },
     ];
     expect(service.onColumnSort('bar')).toBeFalse();
   });
 
-  it('should not sort columns that are not sortable', () => {
+  it('should not allow sorting on columns that are not sortable', () => {
     service.columnDefintions = [
       { name: 'foo', property: 'foo', sortable: false },
     ];
@@ -160,5 +160,53 @@ describe('TGridService', () => {
     expect(service.getPaginationMetadata().pageSize).toBe(1);
   });
 
-  // TODO: test sorting
+  it('should sort data', () => {
+    service.columnDefintions = [
+      { name: 'foo', property: 'foo', sortable: true },
+    ];
+    service.data = [{ foo: 10 }, { foo: 2 }, { foo: -1 }, { foo: 0 }];
+    expect(service.onColumnSort('foo')).toBeTrue();
+
+    const visibleData = service.getVisibleData();
+    expect(visibleData[0].foo).toBe(-1);
+    expect(visibleData[1].foo).toBe(0);
+    expect(visibleData[2].foo).toBe(2);
+    expect(visibleData[3].foo).toBe(10);
+  });
+
+  it('should sort data using localeCompare when data contains strings', () => {
+    service.columnDefintions = [
+      { name: 'foo', property: 'foo', sortable: true },
+    ];
+    service.data = [
+      { foo: '10' },
+      { foo: '2' },
+      { foo: 'é' },
+      { foo: 'E' },
+      { foo: 'e' },
+    ];
+    expect(service.onColumnSort('foo')).toBeTrue();
+
+    const visibleData = service.getVisibleData();
+    expect(visibleData[0].foo).toBe('10');
+    expect(visibleData[1].foo).toBe('2');
+    expect(visibleData[2].foo).toBe('e');
+    expect(visibleData[3].foo).toBe('E');
+    expect(visibleData[4].foo).toBe('é');
+  });
+
+  it('should sort data using localeCompare when one of the compared values is a string', () => {
+    service.columnDefintions = [
+      { name: 'foo', property: 'foo', sortable: true },
+    ];
+    service.data = [{ foo: 10 }, { foo: '2' }, { foo: '3' }, { foo: 29 }, { foo: 30 }];
+    expect(service.onColumnSort('foo')).toBeTrue();
+
+    const visibleData = service.getVisibleData();
+    expect(visibleData[0].foo).toBe(10);
+    expect(visibleData[1].foo).toBe('2');
+    expect(visibleData[2].foo).toBe(29);
+    expect(visibleData[3].foo).toBe('3');
+    expect(visibleData[4].foo).toBe(30);
+  });
 });
