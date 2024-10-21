@@ -1,10 +1,15 @@
 import { Component } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { TGridComponent, TColumnComponent, SortChangeEvent, PaginationChangeEvent } from 't-grid';
 import { TProgressComponent } from 't-progress';
 
-const TEST_DATA: any[] = [];
-for (let i = 1; i < 5; i++) {
-  TEST_DATA.push({ index: i, age: Math.ceil(Math.random() * 70) });
+
+function getRandomData() {
+  const data: any[] = [];
+  for (let i = 1; i < 100; i++) {
+    data.push({ index: i, age: Math.ceil(Math.random() * 70) });
+  }
+  return data;
 }
 
 @Component({
@@ -15,7 +20,11 @@ for (let i = 1; i < 5; i++) {
   styleUrl: './app.component.css',
 })
 export class AppComponent {
-  demoData = TEST_DATA;
+  demoData = new BehaviorSubject<any[]>(getRandomData());
+
+  randomizeData() {
+    this.demoData.next(getRandomData());
+  }
 
   onSortChange(sort: SortChangeEvent) {
     console.log('sort', sort);

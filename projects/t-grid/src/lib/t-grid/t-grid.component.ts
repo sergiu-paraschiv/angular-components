@@ -13,7 +13,9 @@ import {
   OnInit,
   OnChanges,
   SimpleChanges,
+  ChangeDetectorRef,
 } from '@angular/core';
+import { Observable, isObservable } from 'rxjs';
 import { TColumnBase } from './t-column-base';
 import { TGridRowComponent } from '../t-grid-row/t-grid-row.component';
 import { TGridHeaderComponent } from '../t-grid-header/t-grid-header.component';
@@ -45,14 +47,25 @@ export class TGridComponent<T extends TGridRowData>
   implements AfterContentInit, AfterContentChecked, OnInit, OnChanges
 {
   @ContentChildren(TColumnBase) private columns!: QueryList<TColumnBase>;
-  @Input({ required: true }) data: T[] = [];
+
+  @Input({ required: true }) public set data(value: T[] | Observable<T[]>) {
+    if (!isObservable(value)) {
+      this.gridService.data = value;
+    } else {
+      value.subscribe((next) => {
+        this.cd.markForCheck();
+        this.gridService.data = next;
+      });
+    }
+  }
+
   @Input({ transform: booleanAttribute }) sortable: boolean = true;
   @Input({ transform: numberAttribute }) pageSize: number | null = null;
 
   @Output() sortChange = new EventEmitter<SortChangeEvent>();
   @Output() paginationChange = new EventEmitter<PaginationChangeEvent>();
 
-  constructor(public gridService: TGridService<T>) {}
+  constructor(private cd: ChangeDetectorRef, public gridService: TGridService<T>) {}
 
   ngOnInit(): void {
     this.refreshPagination();
@@ -66,10 +79,6 @@ export class TGridComponent<T extends TGridRowData>
 
     if ('sortable' in changes) {
       this.refreshSortable();
-    }
-
-    if ('data' in changes) {
-      this.refreshData();
     }
   }
 
@@ -95,10 +104,6 @@ export class TGridComponent<T extends TGridRowData>
       property: column.property,
       sortable: column.sortable,
     }));
-  }
-
-  refreshData() {
-    this.gridService.data = this.data;
   }
 
   onColumnClick(columnName: string) {

@@ -1,3 +1,4 @@
+import { BehaviorSubject, isObservable, Observable } from 'rxjs';
 import { Component, Input, booleanAttribute } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -47,14 +48,16 @@ class MockTColumnComponent extends TColumnBase {
   `,
 })
 class TestHostComponent {
-  testData: any[] = [];
+  testData: any[] | Observable<any[]> = [];
 
   enableSorting = true;
   includeFifthColumn = false;
   fifthColumnName = 'fifth';
 
   pushThirdRow() {
-    this.testData.push({ foo: 5, bar: 4 });
+    if (!isObservable(this.testData)) {
+      this.testData.push({ foo: 5, bar: 4 });
+    }
   }
 }
 
@@ -257,5 +260,31 @@ describe('t-grid', () => {
     component.onColumnClick(component.gridService.columnDefintions[0].name);
 
     expect(component.sortChange.next).not.toHaveBeenCalled();
+  });
+
+  it('should support Observable data', () => {
+    const subject = new BehaviorSubject([]);
+    spyOn(subject, 'subscribe');
+    component.data = subject;
+
+    expect(subject.subscribe).toHaveBeenCalled();
+  });
+
+  it('should react to Observable data change', () => {
+    const testData1: any[] = [{ foo: 1 }];
+    const testData2: any[] = [{ bar: 2 }];
+    const subject = new BehaviorSubject(testData1);
+    const spy = spyOn((<any>component).cd, 'markForCheck');
+
+    hostComponent.testData = subject;
+    fixture.detectChanges();
+
+    expect(spy).toHaveBeenCalled();
+    expect(component.gridService.data).toBe(testData1);
+
+    subject.next(testData2);
+
+    expect(spy).toHaveBeenCalled();
+    expect(component.gridService.data).toBe(testData2);
   });
 });
