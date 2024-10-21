@@ -1,9 +1,19 @@
-Page size:
-<select class="page-size" [ngModel]="pageSize" (ngModelChange)="onPageSizeChange($event)">
-    <option *ngFor="let option of pageSizes" [value]="option">{{ option }}</option>
-</select>
+<div class="paginator">
+    <select class="page-size" [ngModel]="pageSize" (ngModelChange)="onPageSizeChange($event)">
+        <option *ngFor="let option of pageSizes" [value]="option">{{ option }} per page</option>
+    </select>
 
-<span class="page-info">{{ startIndex }} - {{ endIndex}} of {{ totalItems }}</span>
+    <div class="page-info">{{ startIndex }} - {{ endIndex}} of {{ totalItems }}</div>
 
-<button class="prev" [disabled]="!hasPrev" (click)="onPrevClick()">&lt;</button>
-<button class="next" [disabled]="!hasNext" (click)="onNextClick()">&gt;</button>
+    <button class="prev" [disabled]="!hasPrev" (click)="onPrevClick()">
+        <svg viewBox="0 0 24 24">
+            <path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"></path>
+        </svg>
+    </button>
+
+    <button class="next" [disabled]="!hasNext" (click)="onNextClick()">
+        <svg viewBox="0 0 24 24">
+            <path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"></path>
+        </svg>
+    </button>
+</div>

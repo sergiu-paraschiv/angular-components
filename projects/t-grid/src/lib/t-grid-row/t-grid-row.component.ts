@@ -6,6 +6,7 @@ import { ColumnDefinition, TGridRowData } from '../t-grid/t-grid.service';
   standalone: true,
   imports: [],
   templateUrl: './t-grid-row.component.html',
+  styleUrl: './t-grid-row.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TGridRowComponent {

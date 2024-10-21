@@ -1,0 +1,14 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+td {
+    border-bottom: 1px solid var(--color-border-main);
+    padding: var(--row-padding-y) var(--row-padding-x);
+}
+
+:host-context(tr:hover) td {
+    background-color: var(--color-content-background-elevated);
+}

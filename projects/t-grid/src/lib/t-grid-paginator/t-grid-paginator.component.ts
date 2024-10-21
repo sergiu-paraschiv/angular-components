@@ -14,6 +14,7 @@ import { PaginatorDirection } from '../t-grid/t-grid.service';
   standalone: true,
   imports: [FormsModule, NgForOf],
   templateUrl: './t-grid-paginator.component.html',
+  styleUrl: './t-grid-paginator.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TGridPaginatorComponent {

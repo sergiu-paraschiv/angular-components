@@ -23,12 +23,11 @@
         - table header, receives column definitions from parent table
         - table row, receives data and column definitions from parent table
         - table cell, receives data and column definition from parent table row
-    [-] Decide what services and components are neeed
+    [x] Decide what services and components are neeed
         - `t-grid` and `t-column` public components
         - `t-grid-header`, `t-grid-row` internal components
         - `t-grid-page-size` and `t-grid-pagination` internal components
-        - ?
-    [-] Document list of tests
+    [x] Document list of tests
         - `t-grid` handles data passed in as `T[]`
         - `pagination: null` disables pagination controls
         - `t-grid` handles data passed in as `Observable<T[]>`
@@ -36,7 +35,6 @@
         - changing data (as `Observable<T[]>`) passed to `t-grid` re-renderes the table automatically
         - changing sorting triggers `sortChange` event
         - changing pagination triggers `onChange` event
-        - ?
     [ ] Styling
 
 [ ] Progress indicator components

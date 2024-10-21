@@ -4,8 +4,8 @@
     (sortChange)="onSortChange($event)"
     (paginationChange)="onPaginationChange($event)"
 >
-    <t-column name="index" property="index" [sortable]="true"></t-column>
-    <t-column name="age" property="age" [sortable]="true"></t-column>
+    <t-column name="Index" property="index" [sortable]="true"></t-column>
+    <t-column name="Age" property="age" [sortable]="true"></t-column>
 </t-grid>
 
-<button (click)="randomizeData()">new random data</button>
+<button style="margin-top: 30px" (click)="randomizeData()">new random data</button>

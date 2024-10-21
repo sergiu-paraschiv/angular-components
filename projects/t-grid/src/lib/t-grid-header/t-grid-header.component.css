@@ -1,24 +1,69 @@
-th {
-
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-    th button {
-        cursor: pointer;
+th {
+    position: relative;
+    color: var(--color-content-emphasize);
+    font-weight: normal;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border-main);
+}
+
+    th > button,
+    th > span {
+        display: block;
+        padding: var(--row-padding-y) var(--row-padding-x);
     }
 
-        th button svg {
-            opacity: 0;
-            width: 24px;
-            height: 24px;
+    th:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: var(--row-padding-y);
+        right: 0;
+        bottom: var(--row-padding-y);
+        left: auto;
+        width: 1px;
+        background-color: var(--color-border-main);
+    }
 
-            transform: rotate(180deg);
+button {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    outline: inherit;
+    cursor: pointer;
+}
+
+    button:focus,
+    button:active {
+        outline: 1px solid var(--color-focus);
+    }
+
+    button svg {
+        opacity: 0;
+        width: var(--line-height);
+        height: var(--line-height);
+        vertical-align: top;
+
+        transform: rotate(180deg);
+
+        fill: currentColor;
+    }
+
+        button.descending svg {
+            transform: rotate(0deg);
         }
 
-            th button.descending svg {
-                transform: rotate(0deg);
-            }
+        button:hover svg {
+            opacity: 0.5;
+        }
 
-            th button:hover svg,
-            th button.sortingOn svg {
-                opacity: 1;
-            }
+        button.sortingOn svg {
+            opacity: 1;
+        }

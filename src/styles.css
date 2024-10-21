@@ -1,1 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+    --font-family: 'Noto Sans';
+    --font-size: 18px;
+    --line-height: 21px;
+    --font-size-sm: 15px;
+    --line-heigh-smt: 17px;
+
+    --color-content: #555555;
+    --color-content-emphasize: #1a1a1a;
+    --color-content-background: #fefefe;
+    --color-content-background-elevated: #ececec;
+    --color-border-main: #dbdbdb;
+
+    --color-focus: #6bc3fa;
+
+    --row-padding-x: 8px;
+    --row-padding-y: 16px;
+}
+
+body {
+    padding: 30px;
+}
