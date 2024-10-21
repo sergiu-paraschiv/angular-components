@@ -1,9 +1,9 @@
 Page size:
-<select [ngModel]="pageSize" (ngModelChange)="onPageSizeChange($event)">
+<select class="page-size" [ngModel]="pageSize" (ngModelChange)="onPageSizeChange($event)">
     <option *ngFor="let option of pageSizes" [value]="option">{{ option }}</option>
 </select>
 
-{{ startIndex }} - {{ endIndex}} of {{ totalItems }}
+<span class="page-info">{{ startIndex }} - {{ endIndex}} of {{ totalItems }}</span>
 
-<button [disabled]="!hasPrev" (click)="onPrevClick()">&lt;</button>
-<button [disabled]="!hasNext" (click)="onNextClick()">&gt;</button>
+<button class="prev" [disabled]="!hasPrev" (click)="onPrevClick()">&lt;</button>
+<button class="next" [disabled]="!hasNext" (click)="onNextClick()">&gt;</button>

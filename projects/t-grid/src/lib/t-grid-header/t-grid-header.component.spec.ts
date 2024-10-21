@@ -17,6 +17,7 @@ describe('t-grid-header', () => {
   });
 
   it('should create', () => {
+    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
