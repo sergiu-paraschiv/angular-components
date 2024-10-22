@@ -2,7 +2,7 @@
     - we will use separate library projects for each component and reference these in our main application for easy local development.
     - advantage is that we can later easily push each library separately to the package registry.
 
-[-] Table components
+[x] Table components
     [x] Decide data model and flows
         - table column
             - name (string, displayed in header)
@@ -35,7 +35,7 @@
         - changing data (as `Observable<T[]>`) passed to `t-grid` re-renderes the table automatically
         - changing sorting triggers `sortChange` event
         - changing pagination triggers `onChange` event
-    [ ] Styling
+    [x] Styling
 
 [ ] Progress indicator components
     [ ] Decide data model

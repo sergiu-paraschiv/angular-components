@@ -14,8 +14,9 @@ import {
   OnChanges,
   SimpleChanges,
   ChangeDetectorRef,
+  OnDestroy,
 } from '@angular/core';
-import { Observable, isObservable } from 'rxjs';
+import { Observable, SubscriptionLike, isObservable } from 'rxjs';
 import { TColumnBase } from './t-column-base';
 import { TGridRowComponent } from '../t-grid-row/t-grid-row.component';
 import { TGridHeaderComponent } from '../t-grid-header/t-grid-header.component';
@@ -44,15 +45,24 @@ export type PaginationChangeEvent = Pagination;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TGridComponent<T extends TGridRowData>
-  implements AfterContentInit, AfterContentChecked, OnInit, OnChanges
+  implements
+    AfterContentInit,
+    AfterContentChecked,
+    OnInit,
+    OnChanges,
+    OnDestroy
 {
   @ContentChildren(TColumnBase) private columns!: QueryList<TColumnBase>;
 
+  private dataSubscription: SubscriptionLike | undefined;
+
   @Input({ required: true }) public set data(value: T[] | Observable<T[]>) {
+    this.removeDataSubscription();
+
     if (!isObservable(value)) {
       this.gridService.data = value;
     } else {
-      value.subscribe((next) => {
+      this.dataSubscription = value.subscribe((next) => {
         this.cd.markForCheck();
         this.gridService.data = next;
       });
@@ -65,7 +75,10 @@ export class TGridComponent<T extends TGridRowData>
   @Output() sortChange = new EventEmitter<SortChangeEvent>();
   @Output() paginationChange = new EventEmitter<PaginationChangeEvent>();
 
-  constructor(private cd: ChangeDetectorRef, public gridService: TGridService<T>) {}
+  constructor(
+    private cd: ChangeDetectorRef,
+    public gridService: TGridService<T>
+  ) {}
 
   ngOnInit(): void {
     this.refreshPagination();
@@ -88,6 +101,10 @@ export class TGridComponent<T extends TGridRowData>
 
   ngAfterContentChecked(): void {
     this.refreshColumnDefinitions();
+  }
+
+  ngOnDestroy(): void {
+    this.removeDataSubscription();
   }
 
   refreshPagination() {
@@ -123,5 +140,12 @@ export class TGridComponent<T extends TGridRowData>
   onPageSizeChange(pageSize: number) {
     this.gridService.onPageSizeChange(pageSize);
     this.paginationChange.next(this.gridService.pagination);
+  }
+
+  private removeDataSubscription() {
+    if (this.dataSubscription) {
+      this.dataSubscription.unsubscribe();
+      this.dataSubscription = undefined;
+    }
   }
 }

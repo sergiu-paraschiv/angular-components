@@ -1,4 +1,4 @@
-import { BehaviorSubject, isObservable, Observable } from 'rxjs';
+import { BehaviorSubject, isObservable, Observable, Subscription } from 'rxjs';
 import { Component, Input, booleanAttribute } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -279,12 +279,74 @@ describe('t-grid', () => {
     hostComponent.testData = subject;
     fixture.detectChanges();
 
-    expect(spy).toHaveBeenCalled();
     expect(component.gridService.data).toBe(testData1);
 
     subject.next(testData2);
 
-    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledTimes(2);
     expect(component.gridService.data).toBe(testData2);
+  });
+
+  it('should unsubscribe from Observable when destroyed', () => {
+    const subject = new BehaviorSubject([]);
+    const subscription = new Subscription();
+    const subscribeSpy = spyOn(subject, 'subscribe').and.returnValue(
+      subscription
+    );
+    const unsubscribeSpy = spyOn(subscription, 'unsubscribe');
+
+    component.data = subject;
+    fixture.detectChanges();
+
+    expect(subscribeSpy).toHaveBeenCalled();
+
+    component.ngOnDestroy();
+
+    expect(unsubscribeSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should unsubscribe from Observable when changed', () => {
+    const subject1 = new BehaviorSubject([]);
+    const subscription1 = new Subscription();
+    const subscribeSpy1 = spyOn(subject1, 'subscribe').and.returnValue(
+      subscription1
+    );
+    const unsubscribeSpy1 = spyOn(subscription1, 'unsubscribe');
+
+    const subject2 = new BehaviorSubject([]);
+    const subscription2 = new Subscription();
+    const subscribeSpy2 = spyOn(subject2, 'subscribe').and.returnValue(
+      subscription2
+    );
+
+    component.data = subject1;
+    fixture.detectChanges();
+
+    expect(subscribeSpy1).toHaveBeenCalled();
+
+    component.data = subject2;
+    fixture.detectChanges();
+
+    expect(unsubscribeSpy1).toHaveBeenCalledTimes(1);
+    expect(subscribeSpy2).toHaveBeenCalled();
+  });
+
+  it('should unsubscribe from Observable when switching to plain data', () => {
+    const subject = new BehaviorSubject([]);
+    const subscription = new Subscription();
+    const subscribeSpy = spyOn(subject, 'subscribe').and.returnValue(
+      subscription
+    );
+    const unsubscribeSpy = spyOn(subscription, 'unsubscribe');
+
+    component.data = subject;
+    fixture.detectChanges();
+
+    expect(subscribeSpy).toHaveBeenCalled();
+
+    component.data = [];
+    fixture.detectChanges();
+
+    expect(unsubscribeSpy).toHaveBeenCalledTimes(1);
   });
 });
