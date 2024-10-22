@@ -8,4 +8,37 @@
     <t-column name="Age" property="age" [sortable]="true"></t-column>
 </t-grid>
 
-<button style="margin-top: 30px" (click)="randomizeData()">new random data</button>
+<button style="margin-top: 30px; margin-bottom: 10px;" (click)="randomizeData()">new random data</button>
+
+
+<div>
+    <t-progress
+        [radius]="50"
+        [progress]="progress"
+        color="#0000ff"
+    ></t-progress>
+
+    <t-progress
+        [radius]="60"
+        [progress]="progress"
+        color="#0000ff"
+    ></t-progress>
+
+    <t-progress
+        [radius]="70"
+        [progress]="progress"
+        color="#0000ff"
+    ></t-progress>
+
+    <t-progress
+        [radius]="80"
+        [progress]="progress"
+        color="#0000ff"
+    ></t-progress>
+
+    <t-progress
+        [radius]="90"
+        [progress]="progress"
+        color="#0000ff"
+    ></t-progress>
+</div>

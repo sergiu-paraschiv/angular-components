@@ -21,6 +21,17 @@ function getRandomData() {
 })
 export class AppComponent {
   demoData = new BehaviorSubject<any[]>(getRandomData());
+  progress = 0;
+
+  constructor() {
+    setInterval(() => {
+      this.progress += .3;
+
+      if (this.progress > 100) {
+        this.progress = 0;
+      }
+    }, 10);
+  }
 
   randomizeData() {
     this.demoData.next(getRandomData());

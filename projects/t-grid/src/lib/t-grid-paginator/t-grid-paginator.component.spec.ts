@@ -27,11 +27,11 @@ describe('t-grid-paginator', () => {
 
     const prevButtonElement: HTMLElement =
       fixture.nativeElement.querySelector('button.prev');
-    expect(prevButtonElement).toBeDefined();
+    expect(prevButtonElement).toBeTruthy();
 
     const nextButtonElement: HTMLElement =
       fixture.nativeElement.querySelector('button.next');
-    expect(nextButtonElement).toBeDefined();
+    expect(nextButtonElement).toBeTruthy();
   });
 
   it('should render page size select', () => {
@@ -39,7 +39,7 @@ describe('t-grid-paginator', () => {
 
     const pageSizeElement: HTMLElement =
       fixture.nativeElement.querySelector('select.page-size');
-    expect(pageSizeElement).toBeDefined();
+    expect(pageSizeElement).toBeTruthy();
   });
 
   it('should render page information', () => {
@@ -50,7 +50,7 @@ describe('t-grid-paginator', () => {
 
     const pageInfoElement: HTMLElement =
       fixture.nativeElement.querySelector('.page-info');
-    expect(pageInfoElement).toBeDefined();
+    expect(pageInfoElement).toBeTruthy();
     expect(pageInfoElement.textContent).toBe('3 - 2 of 1');
   });
 

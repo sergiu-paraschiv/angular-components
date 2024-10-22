@@ -7,7 +7,7 @@ describe('TGridService', () => {
   });
 
   it('should exist', () => {
-    expect(service).toBeDefined();
+    expect(service).toBeTruthy();
   });
 
   it('should allow sorting on columns', () => {
