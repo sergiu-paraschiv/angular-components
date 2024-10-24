@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TIconComponent } from './t-icon.component';
 
-describe('TIconComponent', () => {
+describe('t-icon', () => {
   let component: TIconComponent;
   let fixture: ComponentFixture<TIconComponent>;
 

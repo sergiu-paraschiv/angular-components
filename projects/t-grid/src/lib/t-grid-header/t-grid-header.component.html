@@ -1,8 +1,11 @@
 @for (column of columns; track $index) {
-    <th>
+    <th attr.data-test-id="column-{{ $index }}">
         @if (!disableSort && column.sortable) {
             @let sortState = getColumnSortState(column);
-            <button (click)="onColumnClick(column)">
+            <button
+                (click)="onColumnClick(column)"
+                attr.data-test-id="column-sortable-{{ column.name }}"
+            >
                 {{ column.name }}
 
                 <span class="icon-wrap">

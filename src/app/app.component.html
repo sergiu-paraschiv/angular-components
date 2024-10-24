@@ -4,6 +4,9 @@
     (sortChange)="onSortChange($event)"
     (paginationChange)="onPaginationChange($event)"
 >
+    @if (progress < 50) {
+        <t-column name="Index #{{progress}}" property="index" [sortable]="true"></t-column>
+    }
     <t-column name="Index" property="index" [sortable]="true"></t-column>
     <t-column name="Age" property="age" [sortable]="true"></t-column>
 </t-grid>

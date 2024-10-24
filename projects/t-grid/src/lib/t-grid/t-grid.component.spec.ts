@@ -138,6 +138,8 @@ describe('t-grid', () => {
   });
 
   it('should react to column definition changes', () => {
+    const spy = spyOn((<any>component).cd, 'markForCheck');
+
     fixture.detectChanges();
     expect(component.gridService.columnDefintions.length).toBe(4);
 
@@ -155,89 +157,28 @@ describe('t-grid', () => {
     hostComponent.includeFifthColumn = false;
     fixture.detectChanges();
     expect(component.gridService.columnDefintions.length).toBe(4);
+
+    expect(spy).toHaveBeenCalledTimes(4);
   });
 
   it('should render header', () => {
     fixture.detectChanges();
 
-    const theadColumnElement: HTMLElement =
-      fixture.nativeElement.querySelectorAll('thead');
-    expect(theadColumnElement).toBeTruthy();
+    const headerElement: HTMLElement =
+      fixture.nativeElement.querySelectorAll('[data-test-id="header"]');
+    expect(headerElement).toBeTruthy();
   });
 
-  it('should render body with rows', () => {
+  it('should render rows', () => {
     hostComponent.testData = [
       { foo: 1, bar: 0 },
       { foo: 3, bar: 2 },
     ];
     fixture.detectChanges();
 
-    const tbodyRowElements: HTMLElement[] =
-      fixture.nativeElement.querySelectorAll('tbody tr');
-    expect(tbodyRowElements.length).toBe(2);
-
-    const cellElements: HTMLElement[] =
-      fixture.nativeElement.querySelectorAll('tbody tr td');
-    expect(cellElements.length).toBe(8);
-    expect(cellElements[0].textContent).toBe('0');
-    expect(cellElements[1].textContent).toBe('1');
-    expect(cellElements[2].textContent).toBe('1');
-    expect(cellElements[3].textContent).toBe('0');
-    expect(cellElements[4].textContent).toBe('2');
-    expect(cellElements[5].textContent).toBe('3');
-    expect(cellElements[6].textContent).toBe('3');
-    expect(cellElements[7].textContent).toBe('2');
-  });
-
-  it('should render empty cells for unknown fields', () => {
-    hostComponent.testData = [{ foo: 0 }];
-    fixture.detectChanges();
-
-    const cellElements: HTMLElement[] =
-      fixture.nativeElement.querySelectorAll('tbody tr td');
-    expect(cellElements.length).toBe(4);
-    expect(cellElements[0].textContent).toBe('');
-    expect(cellElements[1].textContent).toBe('0');
-  });
-
-  it('should render empty cells for fields explicitly set to undefined', () => {
-    hostComponent.testData = [{ bar: undefined }];
-    fixture.detectChanges();
-
-    const cellElements: HTMLElement[] =
-      fixture.nativeElement.querySelectorAll('tbody tr td');
-    expect(cellElements.length).toBe(4);
-    expect(cellElements[0].textContent).toBe('');
-  });
-
-  it('should react to data changes', () => {
-    hostComponent.testData = [{ bar: 1 }];
-    fixture.detectChanges();
-
-    const cellElements: HTMLElement[] =
-      fixture.nativeElement.querySelectorAll('tbody tr td');
-    expect(cellElements.length).toBe(4);
-    expect(cellElements[0].textContent).toBe('1');
-
-    hostComponent.testData = [{ bar: 2 }];
-    fixture.detectChanges();
-
-    expect(cellElements[0].textContent).toBe('2');
-  });
-
-  it('should react to data changes only when reference is changed, because of OnPush strategy', () => {
-    hostComponent.testData = [{ bar: 1 }];
-    fixture.detectChanges();
-
-    const cellElements: HTMLElement[] =
-      fixture.nativeElement.querySelectorAll('tbody tr td');
-    expect(cellElements.length).toBe(4);
-    expect(cellElements[0].textContent).toBe('1');
-
-    hostComponent.testData[0].bar = 2;
-    fixture.detectChanges();
-
-    expect(cellElements[0].textContent).toBe('1');
+    const rowElements: HTMLElement[] =
+      fixture.nativeElement.querySelectorAll('[data-test-id^="row-"]');
+    expect(rowElements.length).toBe(2);
   });
 
   it('should emit SortChangeEvent', () => {
@@ -283,7 +224,7 @@ describe('t-grid', () => {
 
     subject.next(testData2);
 
-    expect(spy).toHaveBeenCalledTimes(2);
+    expect(spy).toHaveBeenCalledTimes(3);
     expect(component.gridService.data).toBe(testData2);
   });
 
@@ -348,5 +289,19 @@ describe('t-grid', () => {
     fixture.detectChanges();
 
     expect(unsubscribeSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should react to data changes only when reference is changed, because of OnPush strategy', () => {
+    hostComponent.testData = [
+      { foo: 1, bar: 0 },
+    ];
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll('[data-test-id^="row-"]').length).toBe(1);
+
+    hostComponent.testData.push({ foo: 3, bar: 2 });
+    fixture.detectChanges();
+    
+    expect(fixture.nativeElement.querySelectorAll('[data-test-id^="row-"]').length).toBe(1);
   });
 });

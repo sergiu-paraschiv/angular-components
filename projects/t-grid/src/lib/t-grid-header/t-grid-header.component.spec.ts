@@ -28,23 +28,25 @@ describe('t-grid-header', () => {
     ];
     fixture.detectChanges();
 
-    const theadColumnElements: HTMLElement[] =
-      fixture.nativeElement.querySelectorAll('th');
-    expect(theadColumnElements.length).toBe(1);
-    expect(theadColumnElements[0].textContent?.trim()).toBe('name');
+    const columnElements: HTMLElement[] =
+      fixture.nativeElement.querySelectorAll('[data-test-id^="column-"]');
+    expect(columnElements.length).toBe(1);
+    expect(columnElements[0].textContent?.trim()).toBe('name');
   });
 
-  it('should render buttons for sortable columns', () => {
+  it('should render sortable columns', () => {
     component.sort = { property: undefined, direction: Direction.Ascending };
     component.columns = [
       { name: 'name', property: 'property', sortable: true },
     ];
     fixture.detectChanges();
 
-    const theadColumnElements: HTMLElement[] =
-      fixture.nativeElement.querySelectorAll('th button');
-    expect(theadColumnElements.length).toBe(1);
-    expect(theadColumnElements[0].textContent?.trim()).toBe('name');
+    const columnElements: HTMLElement[] =
+      fixture.nativeElement.querySelectorAll(
+        '[data-test-id^="column-sortable-"]'
+      );
+    expect(columnElements.length).toBe(1);
+    expect(columnElements[0].textContent?.trim()).toBe('name');
   });
 
   it('should handle header clicks', () => {
@@ -55,10 +57,11 @@ describe('t-grid-header', () => {
     ];
     fixture.detectChanges();
 
-    const theadColumnButtonElements: HTMLElement[] =
-      fixture.nativeElement.querySelectorAll('th button');
-
-    theadColumnButtonElements[0].dispatchEvent(new MouseEvent('click'));
+    const nameSortableActionElement: HTMLElement =
+      fixture.nativeElement.querySelector(
+        '[data-test-id="column-sortable-name"]'
+      );
+    nameSortableActionElement.dispatchEvent(new MouseEvent('click'));
     expect(component.onColumnClick).toHaveBeenCalledOnceWith(
       component.columns[0]
     );
@@ -93,7 +96,7 @@ describe('t-grid-header', () => {
     expect(component.columnClick.next).not.toHaveBeenCalled();
   });
 
-  it('should generate sortable column state usable for [class] mapping', () => {
+  it('should generate sortable column state', () => {
     component.sort = { property: undefined, direction: Direction.Ascending };
     component.columns = [
       { name: 'name', property: 'property', sortable: true },
@@ -131,5 +134,16 @@ describe('t-grid-header', () => {
     expect(columnState4.sortingOn).toBeFalse();
     expect(columnState4.ascending).toBeFalse();
     expect(columnState4.descending).toBeFalse();
+  });
+
+  it('should react to column definition changes', () => {
+    component.columns = [{ name: 'name', property: 'property' }];
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('[data-test-id="column-0"]').textContent).toBe('name');
+
+    fixture.componentRef.setInput('columns', [{ name: 'other name', property: 'property' }]);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('[data-test-id="column-0"]').textContent).toBe('other name');
   });
 });

@@ -22,15 +22,15 @@ describe('t-grid-paginator', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render prev/next buttons', () => {
+  it('should render prev/next actions', () => {
     fixture.detectChanges();
 
     const prevButtonElement: HTMLElement =
-      fixture.nativeElement.querySelector('button.prev');
+      fixture.nativeElement.querySelector('[data-test-id="prev"]');
     expect(prevButtonElement).toBeTruthy();
 
     const nextButtonElement: HTMLElement =
-      fixture.nativeElement.querySelector('button.next');
+      fixture.nativeElement.querySelector('[data-test-id="next"]');
     expect(nextButtonElement).toBeTruthy();
   });
 
@@ -38,7 +38,7 @@ describe('t-grid-paginator', () => {
     fixture.detectChanges();
 
     const pageSizeElement: HTMLElement =
-      fixture.nativeElement.querySelector('select.page-size');
+      fixture.nativeElement.querySelector('[data-test-id="page-size"]');
     expect(pageSizeElement).toBeTruthy();
   });
 
@@ -49,7 +49,7 @@ describe('t-grid-paginator', () => {
     fixture.detectChanges();
 
     const pageInfoElement: HTMLElement =
-      fixture.nativeElement.querySelector('.page-info');
+      fixture.nativeElement.querySelector('[data-test-id="page-info"]');
     expect(pageInfoElement).toBeTruthy();
     expect(pageInfoElement.textContent).toBe('3 - 2 of 1');
   });
@@ -60,11 +60,11 @@ describe('t-grid-paginator', () => {
     fixture.detectChanges();
 
     const prevButtonElement: HTMLButtonElement =
-      fixture.nativeElement.querySelector('button.prev');
+      fixture.nativeElement.querySelector('[data-test-id="prev"]');
     expect(prevButtonElement.disabled).toBeTrue();
 
     const nextButtonElement: HTMLButtonElement =
-      fixture.nativeElement.querySelector('button.next');
+      fixture.nativeElement.querySelector('[data-test-id="next"]');
     expect(nextButtonElement.disabled).toBeTrue();
   });
 
@@ -73,11 +73,11 @@ describe('t-grid-paginator', () => {
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       const pageSizeSelectedElement: HTMLSelectElement =
-        fixture.nativeElement.querySelector('select.page-size');
+        fixture.nativeElement.querySelector('[data-test-id="page-size"]');
       expect(pageSizeSelectedElement.value).toBe('10');
 
       const pageSizeSelectedOptionElement: HTMLOptionElement =
-        fixture.nativeElement.querySelector('select.page-size option:checked');
+        fixture.nativeElement.querySelector('[data-test-id="page-size"] option:checked');
       expect(pageSizeSelectedOptionElement.value).toBe('10');
     });
   }));
@@ -86,7 +86,7 @@ describe('t-grid-paginator', () => {
     spyOn(component, 'onPageSizeChange');
 
     const pageSizeSelectedElement: HTMLSelectElement =
-      fixture.nativeElement.querySelector('select.page-size');
+      fixture.nativeElement.querySelector('[data-test-id="page-size"]');
 
     pageSizeSelectedElement.value = pageSizeSelectedElement.options[2].value;
     pageSizeSelectedElement.dispatchEvent(new Event('change'));
@@ -99,7 +99,7 @@ describe('t-grid-paginator', () => {
     spyOn(component, 'onPrevClick');
 
     const prevButtonElement: HTMLButtonElement =
-      fixture.nativeElement.querySelector('button.prev');
+      fixture.nativeElement.querySelector('[data-test-id="prev"]');
 
     prevButtonElement.dispatchEvent(new Event('click'));
     fixture.detectChanges();
@@ -111,7 +111,7 @@ describe('t-grid-paginator', () => {
     spyOn(component, 'onNextClick');
 
     const nextButtonElement: HTMLButtonElement =
-      fixture.nativeElement.querySelector('button.next');
+      fixture.nativeElement.querySelector('[data-test-id="next"]');
 
     nextButtonElement.dispatchEvent(new Event('click'));
     fixture.detectChanges();

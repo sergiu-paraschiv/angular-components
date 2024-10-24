@@ -2,6 +2,7 @@
     <thead>
         <tr
             t-grid-header
+            data-test-id="header"
             [columns]="gridService.columnDefintions"
             [sort]="gridService.sort"
             [disableSort]="gridService.disableSort"
@@ -12,6 +13,7 @@
         @for (item of gridService.getVisibleData(); track $index) {
             <tr
                 t-grid-row
+                attr.data-test-id="row-{{ $index }}"
                 [data]="item"
                 [columns]="gridService.columnDefintions"
             ></tr>

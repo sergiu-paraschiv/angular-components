@@ -116,11 +116,16 @@ export class TGridComponent<T extends TGridRowData>
   }
 
   refreshColumnDefinitions() {
-    this.gridService.columnDefintions = this.columns.map((column) => ({
+    const newDefinitions = this.columns.map((column) => ({
       name: column.name,
       property: column.property,
       sortable: column.sortable,
     }));
+
+    if (JSON.stringify(this.gridService.columnDefintions) !== JSON.stringify(newDefinitions)) {
+      this.gridService.columnDefintions = newDefinitions;
+      this.cd.markForCheck();
+    }
   }
 
   onColumnClick(columnName: string) {

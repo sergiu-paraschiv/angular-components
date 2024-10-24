@@ -1,3 +1,3 @@
 @for (cell of columns; track $index) {
-    <td>{{ data[cell.property] }}</td>
+    <td attr.data-test-id="cell-{{ $index }}">{{ data[cell.property] }}</td>
 }
