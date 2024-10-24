@@ -2,15 +2,14 @@
     <th>
         @if (!disableSort && column.sortable) {
             @let sortState = getColumnSortState(column);
-            <button
-                (click)="onColumnClick(column)"
-                [class]="{ sortingOn: sortState.sortingOn, ascending: sortState.ascending, descending: sortState.descending }"
-            >
+            <button (click)="onColumnClick(column)">
                 {{ column.name }}
 
-                <svg viewBox="0 0 24 24">
-                    <path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"></path>
-                </svg>
+                <span class="icon-wrap">
+                    @if (sortState.sortingOn) {
+                       <t-icon type="arrow" [orientation]="sortState.ascending ? 'down' : 'up'"></t-icon>
+                    }
+                </span>
             </button>
         } @else {
             <span>{{ column.name }}</span>

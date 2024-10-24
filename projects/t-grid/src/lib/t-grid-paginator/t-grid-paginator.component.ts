@@ -8,11 +8,12 @@ import {
 import { FormsModule } from '@angular/forms';
 import { NgForOf } from '@angular/common';
 import { PaginatorDirection } from '../t-grid/t-grid.service';
+import { TIconComponent } from '../t-icon/t-icon.component';
 
 @Component({
   selector: 't-grid-paginator',
   standalone: true,
-  imports: [FormsModule, NgForOf],
+  imports: [FormsModule, NgForOf, TIconComponent],
   templateUrl: './t-grid-paginator.component.html',
   styleUrl: './t-grid-paginator.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

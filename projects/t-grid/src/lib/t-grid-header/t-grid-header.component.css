@@ -45,25 +45,13 @@ button {
         outline: 1px solid var(--color-focus);
     }
 
-    button svg {
-        opacity: 0;
+    button .icon-wrap {
+        display: inline-block;
+        vertical-align: top;
         width: var(--line-height);
         height: var(--line-height);
-        vertical-align: top;
-
-        transform: rotate(180deg);
-
-        fill: currentColor;
     }
 
-        button.descending svg {
-            transform: rotate(0deg);
-        }
-
-        button:hover svg {
+        button:hover .icon-wrap {
             opacity: 0.5;
-        }
-
-        button.sortingOn svg {
-            opacity: 1;
         }

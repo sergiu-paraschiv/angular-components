@@ -6,11 +6,12 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { ColumnDefinition, Direction, Sort } from '../t-grid/t-grid.service';
+import { TIconComponent } from '../t-icon/t-icon.component';
 
 @Component({
   selector: '[t-grid-header]',
   standalone: true,
-  imports: [],
+  imports: [TIconComponent],
   templateUrl: './t-grid-header.component.html',
   styleUrl: './t-grid-header.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
